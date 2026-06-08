@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InstaScope — Instagram Profile Scraper</title>
+  <meta name="description" content="Scrape Instagram profile data including ID, email, category, followers, following and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Animated background orbs -->
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+  </div>
+
+  <main id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig-gradient)" stroke-width="2"/>
+            <circle cx="12" cy="12" r="5" stroke="url(#ig-gradient)" stroke-width="2"/>
+            <circle cx="17.5" cy="6.5" r="1.5" fill="url(#ig-gradient)"/>
+            <defs>
+              <linearGradient id="ig-gradient" x1="0" y1="24" x2="24" y2="0">
+                <stop stop-color="#feda75"/>
+                <stop offset="0.25" stop-color="#fa7e1e"/>
+                <stop offset="0.5" stop-color="#d62976"/>
+                <stop offset="0.75" stop-color="#962fbf"/>
+                <stop offset="1" stop-color="#4f5bd5"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h1 class="logo-text">Insta<span class="logo-highlight">Scope</span></h1>
+      </div>
+      <p class="tagline">Extract Instagram profile data instantly</p>
+    </header>
+
+    <!-- Session Cookie Panel -->
+    <section class="session-section" id="session-section">
+      <div class="session-card">
+        <div class="session-header" id="session-toggle">
+          <div class="session-title-row">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span class="session-title">Session Cookie</span>
+            <span class="session-status" id="session-status">● Not connected</span>
+          </div>
+          <svg class="session-chevron" id="session-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="session-body" id="session-body">
+          <p class="session-help">
+            To scrape Instagram profiles, you must provide your active <strong>sessionid</strong> cookie. Follow these simple steps:
+          </p>
+          <div class="session-steps">
+            <div class="step">
+              <span class="step-num">1</span>
+              <span>Open <a href="https://www.instagram.com" target="_blank" rel="noopener">instagram.com</a> in your browser and ensure you are <strong>logged in</strong>.</span>
+            </div>
+            <div class="step">
+              <span class="step-num">2</span>
+              <span>Press <kbd>F12</kbd> to open DevTools, then select the <strong>Application</strong> tab (or <strong>Storage</strong> in Firefox).</span>
+            </div>
+            <div class="step">
+              <span class="step-num">3</span>
+              <span>In the left pane, expand <strong>Cookies</strong> and select <code>https://www.instagram.com</code>.</span>
+            </div>
+            <div class="step">
+              <span class="step-num">4</span>
+              <span>Find the cookie named <strong>sessionid</strong>, double-click its <strong>Value</strong> column, and copy it.</span>
+            </div>
+            <div class="step">
+              <span class="step-num">5</span>
+              <span>Paste that value in the field below and click <strong>Save</strong>.</span>
+            </div>
+          </div>
+          <div class="session-input-row">
+            <input type="password" id="session-input" class="session-input" placeholder="Paste your sessionid (e.g. 33886539%3A...) or full Cookie header..." autocomplete="off" spellcheck="false" />
+            <button id="session-save-btn" class="session-save-btn">Save</button>
+          </div>
+          <div id="session-warning" class="session-warning" style="display: none"></div>
+          <p class="session-disclaimer">🔒 Your session cookies are stored securely on the local server (<code>session_cookies.txt</code>) so they persist between restarts. They are never sent to any third party.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section" id="search-section">
+      <div class="search-card">
+        <div class="search-input-wrapper">
+          <span class="search-at">@</span>
+          <input
+            type="text"
+            id="username-input"
+            class="search-input"
+            placeholder="Enter Instagram username..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button id="search-btn" class="search-btn" aria-label="Search profile">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <div class="spinner" style="display:none"></div>
+          </button>
+        </div>
+        <p class="search-hint">Try: <button class="hint-btn" data-username="instagram">instagram</button> · <button class="hint-btn" data-username="cristiano">cristiano</button> · <button class="hint-btn" data-username="natgeo">natgeo</button></p>
+      </div>
+    </section>
+
+    <!-- Error Section -->
+    <section class="error-section" id="error-section" style="display:none">
+      <div class="error-card">
+        <div class="error-icon">⚠️</div>
+        <p class="error-message" id="error-message"></p>
+        <button class="retry-btn" id="retry-btn">Try Again</button>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="results-section" style="display:none">
+
+      <!-- Profile Card -->
+      <div class="profile-card" id="profile-card">
+        <div class="profile-header">
+          <div class="profile-pic-wrapper">
+            <img id="profile-pic" class="profile-pic" src="" alt="Profile picture" />
+            <div class="verified-badge" id="verified-badge" style="display:none" title="Verified">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#3897f0">
+                <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="profile-info">
+            <h2 class="profile-name" id="profile-name"></h2>
+            <p class="profile-username" id="profile-username"></p>
+            <span class="profile-badge business-badge" id="business-badge" style="display:none">Business</span>
+            <span class="profile-badge private-badge" id="private-badge" style="display:none">Private</span>
+            <span class="profile-badge category-badge" id="category-badge" style="display:none"></span>
+          </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+          <div class="stat-item">
+            <span class="stat-value" id="stat-posts">0</span>
+            <span class="stat-label">Posts</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value" id="stat-followers">0</span>
+            <span class="stat-label">Followers</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value" id="stat-following">0</span>
+            <span class="stat-label">Following</span>
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="bio-section" id="bio-section" style="display:none">
+          <p class="bio-text" id="bio-text"></p>
+        </div>
+      </div>
+
+      <!-- Data Table Card -->
+      <div class="data-card" id="data-card">
+        <div class="data-card-header">
+          <h3 class="data-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Scraped Data
+          </h3>
+          <button class="export-btn" id="export-btn" title="Export to CSV">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+        </div>
+        <div class="data-table-wrapper">
+          <table class="data-table" id="data-table">
+            <tbody id="data-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Built for educational purposes only. Use responsibly.</p>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
