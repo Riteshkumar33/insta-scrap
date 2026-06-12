@@ -14,26 +14,20 @@ Before running the application, ensure you have the following installed on your 
 
 ## 🚀 Installation & Setup
 
-Follow these simple steps to install and run the application:
+1. **Install Python Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 1. Clone the Repository
-Clone the repository to your local machine:
-```bash
-git clone https://github.com/Riteshkumar33/insta-scrap.git
-cd insta-scrap
-```
+2. **Run the Server**:
+   ```bash
+   python server.py
+   ```
+   Or via npm:
+   ```bash
+   npm start
+   ```
 
-### 2. Install Dependencies
-Install the required Node.js dependencies:
-```bash
-npm install
-```
-
-### 3. Run the Server
-Start the Express server:
-```bash
-npm start
-```
 By default, the server will run on: [http://localhost:3000](http://localhost:3000)
 
 ---

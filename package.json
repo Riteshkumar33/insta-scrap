@@ -2,12 +2,10 @@
   "name": "insta-scraper",
   "version": "1.0.0",
   "description": "Instagram Profile Scraper - Web App",
-  "main": "server.js",
+  "main": "server.py",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "python server.py",
+    "dev": "python server.py"
   },
-  "dependencies": {
-    "express": "^4.21.0"
-  }
+  "dependencies": {}
 }
